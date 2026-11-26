@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMP® Exam Simulator & Master Prep - Designed by Harisha T</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        pmi: {
+                            blue: '#002F6C',
+                            navy: '#0C2340',
+                            gold: '#FFB81C',
+                            teal: '#00857C',
+                            slate: '#4A5568',
+                            light: '#F4F7FB'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+
+        :root {
+            --gn-ink: #1F1F1F;
+            --gn-blue: #0000EE;
+            --gn-muted: #45474D;
+            --gn-surface: #FFFFFF;
+            --gn-border: rgba(31, 31, 31, 0.14);
+            --gn-radius-sm: 24px;
+            --gn-radius-md: 36px;
+            --gn-radius-lg: 83.2px;
+            --gn-radius-xl: 94px;
+        }
+
+        body {
+            font-family: 'Google Sans', 'Google Sans Text', 'Plus Jakarta Sans', 'Times New Roman', sans-serif;
+            background-color: var(--gn-surface);
+            color: var(--gn-ink);
+            font-weight: 400;
+            overflow-x: hidden;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Gemini Notebook Motion Tokens */
+        @keyframes appearFromTop {
+            0% {
+                opacity: 0;
+                transform: translateY(-16px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes textShine {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .gn-appear {
+            animation: 0.7s cubic-bezier(0.16, 1, 0.3, 1) both appearFromTop;
+        }
+
+        .gn-text-shine {
+            background: linear-gradient(90deg, #1F1F1F 0%, #0000EE 50%, #1F1F1F 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: 3s ease-in-out infinite alternate textShine;
+        }
+
+        /* Gemini Notebook Shapes & Flat Data-Forward Surfaces (No Decorative Shadows) */
+        .gn-card {
+            background-color: var(--gn-surface);
+            border: 1px solid var(--gn-border);
+            border-radius: var(--gn-radius-sm);
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .gn-card:hover {
+            border-color: var(--gn-ink);
+        }
+
+        .gn-card-active {
+            border: 2px solid var(--gn-blue);
+        }
+
+        .gn-hero {
+            background-color: var(--gn-surface);
+            border: 1px solid var(--gn-border);
+            border-radius: var(--gn-radius-md);
+        }
+
+        .gn-pill {
+            border-radius: var(--gn-radius-xl);
+            transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .gn-pill:focus-visible,
+        button:focus-visible,
+        a:focus-visible {
+            outline: 2px solid var(--gn-blue);
+            outline-offset: 2px;
+        }
+
+        button:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        /* Scoped Gemini Notebook overrides for #main-content sub-views */
+        #main-content .bg-white {
+            background-color: #FFFFFF !important;
+            border-color: rgba(31, 31, 31, 0.14) !important;
+            box-shadow: none !important;
+        }
+        #main-content .shadow-sm,
+        #main-content .shadow-md,
+        #main-content .shadow-lg,
+        #main-content .shadow-xl,
+        #main-content .shadow-2xl {
+            box-shadow: none !important;
+        }
+        #main-content .rounded-2xl {
+            border-radius: 24px !important;
+        }
+        #main-content .rounded-3xl {
+            border-radius: 36px !important;
+        }
+        #main-content .rounded-full {
+            border-radius: 94px !important;
+        }
+        #main-content .text-slate-900,
+        #main-content .text-slate-800 {
+            color: #1F1F1F !important;
+        }
+        #main-content .text-slate-600,
+        #main-content .text-slate-500 {
+            color: #45474D !important;
+        }
+        #main-content .text-blue-600,
+        #main-content .text-blue-700,
+        #main-content .text-blue-800,
+        #main-content .text-blue-900 {
+            color: #0000EE !important;
+        }
+        #main-content h1, #main-content h2, #main-content h3, #main-content h4 {
+            font-weight: 500 !important;
+        }
+
+        .strikethrough-opt {
+            text-decoration: line-through;
+            opacity: 0.45;
+        }
+
+        .highlighted-text {
+            background-color: #fef08a;
+            color: #854d0e;
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        /* 3D Flip Card Styles for Flashcards */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Pearson VUE Exam UI styling */
+        .exam-grid-btn {
+            transition: all 0.15s ease;
+        }
+        .exam-grid-btn.current {
+            outline: 2px solid #002F6C;
+            outline-offset: 2px;
+            font-weight: 700;
+        }
+        .exam-grid-btn.answered {
+            background-color: #0284c7;
+            color: white;
+            border-color: #0369a1;
+        }
+        .exam-grid-btn.flagged {
+            position: relative;
+        }
+        .exam-grid-btn.flagged::after {
+            content: "★";
+            position: absolute;
+            top: -4px;
+            right: 0px;
+            font-size: 10px;
+            color: #eab308;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#FFFFFF] text-[#1F1F1F] relative selection:bg-[#0000EE] selection:text-[#FFFFFF]">
+
+    <!-- Top Navigation Header (Yellow #F9D344 Background + Black #2E2D29 Font) -->
+    <header class="bg-[#F9D344] text-[#2E2D29] sticky top-0 z-40 border-b border-[#2E2D29]/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between gap-3 py-3">
+                <!-- Brand / Logo -->
+                <div class="flex items-center space-x-2.5 cursor-pointer shrink-0" onclick="app.navigate('dashboard')">
+                    <div class="w-10 h-10 rounded-[24px] bg-[#2E2D29] flex items-center justify-center font-medium text-[#F9D344] text-[14px] shrink-0">
+                        PMP
+                    </div>
+                    <div class="whitespace-nowrap">
+                        <div class="flex items-center space-x-2">
+                            <span class="font-medium text-[16px] tracking-tight text-[#2E2D29]">PMP® Exam Simulator</span>
+                        </div>
+                        <div class="flex items-center space-x-1.5 text-[12px] text-[#2E2D29]/85">
+                            <span>1,840 Qs</span>
+                            <span>•</span>
+                            <span class="text-[#2E2D29] font-medium">Designed by Harisha T</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nav Tabs -->
+                <nav class="hidden lg:flex items-center space-x-0.5" id="main-nav-tabs" aria-label="Primary Navigation">
+                    <button onclick="app.navigate('dashboard')" data-tab="dashboard" class="nav-tab-btn gn-pill px-2.5 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors hover:bg-[#2E2D29]/10 text-[#2E2D29] flex items-center space-x-1 active-tab">
+                        <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 shrink-0"></i>
+                        <span>Dashboard</span>
+                    </button>
+                    <button onclick="app.navigate('matrix')" data-tab="matrix" class="nav-tab-btn gn-pill px-2.5 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors hover:bg-[#2E2D29]/10 flex items-center space-x-1 text-[#2E2D29]">
+                        <i data-lucide="grid-3x3" class="w-3.5 h-3.5 shrink-0"></i>
+                        <span>Matrix</span>
+                    </button>
+                    <button onclick="app.navigate('question-bank')" data-tab="question-bank" class="nav-tab-btn gn-pill px-2.5 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors hover:bg-[#2E2D29]/10 flex items-center space-x-1 text-[#2E2D29]">
+                        <i data-lucide="database" class="w-3.5 h-3.5 shrink-0"></i>
+                        <span>Ques Rep</span>
+                    </button>
+                    <button onclick="app.navigate('chapters')" data-tab="chapters" class="nav-tab-btn gn-pill px-2.5 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors hover:bg-[#2E2D29]/10 flex items-center space-x-1 text-[#2E2D29]">
+                        <i data-lucide="book-open" class="w-3.5 h-3.5 shrink-0"></i>
+                        <span>Chapters</span>
+                    </button>
+                    <button onclick="app.navigate('focus-areas')" data-tab="focus-areas" class="nav-tab-btn gn-pill px-2.5 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors hover:bg-[#2E2D29]/10 flex items-center space-x-1 text-[#2E2D29]">
+                        <i data-lucide="target" class="w-3.5 h-3.5 shrink-0"></i>
+                        <span>Focus Areas</span>
+                    </button>
+                    <button onclick="app.navigate('domains')" data-tab="domains" class="nav-tab-btn gn-pill px-2.5 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors hover:bg-[#2E2D29]/10 flex items-center space-x-1 text-[#2E2D29]">
+                        <i data-lucide="layers" class="w-3.5 h-3.5 shrink-0"></i>
+                        <span>Domains</span>
+                    </button>
+                    <button onclick="app.navigate('flashcards')" data-tab="flashcards" class="nav-tab-btn gn-pill px-2.5 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors hover:bg-[#2E2D29]/10 flex items-center space-x-1 text-[#2E2D29]">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5 shrink-0"></i>
+                        <span>Flashcards</span>
+                    </button>
+                    <button onclick="app.navigate('eco-explorer')" data-tab="eco-explorer" class="nav-tab-btn gn-pill px-2.5 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors hover:bg-[#2E2D29]/10 flex items-center space-x-1 text-[#2E2D29]">
+                        <i data-lucide="compass" class="w-3.5 h-3.5 shrink-0"></i>
+                        <span>ECO</span>
+                    </button>
+                </nav>
+
+                <!-- Right Quick Launch Button -->
+                <div class="flex items-center space-x-2 shrink-0">
+                    <button onclick="app.startFullMockExamPrompt()" class="gn-pill bg-[#2E2D29] hover:bg-[#1F1F1F] text-[#F9D344] font-medium px-4 py-2 text-[14px] whitespace-nowrap flex items-center space-x-1.5 transition-colors cursor-pointer">
+                        <i data-lucide="play-circle" class="w-4 h-4 shrink-0"></i>
+                        <span class="hidden sm:inline">Start Full Exam</span>
+                        <span class="sm:hidden">Exam</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile & Tablet Navigation Strip (lg:hidden) -->
+            <nav class="flex lg:hidden items-center space-x-1 overflow-x-auto py-2 border-t border-[#2E2D29]/15" aria-label="Mobile Navigation">
+                <button onclick="app.navigate('dashboard')" data-tab="dashboard" class="nav-tab-btn gn-pill px-3 py-1.5 text-[14px] font-medium whitespace-nowrap text-[#2E2D29]">Dashboard</button>
+                <button onclick="app.navigate('matrix')" data-tab="matrix" class="nav-tab-btn gn-pill px-3 py-1.5 text-[14px] font-medium whitespace-nowrap text-[#2E2D29]">Matrix</button>
+                <button onclick="app.navigate('question-bank')" data-tab="question-bank" class="nav-tab-btn gn-pill px-3 py-1.5 text-[14px] font-medium whitespace-nowrap text-[#2E2D29]">Ques Rep</button>
+                <button onclick="app.navigate('chapters')" data-tab="chapters" class="nav-tab-btn gn-pill px-3 py-1.5 text-[14px] font-medium whitespace-nowrap text-[#2E2D29]">Chapters</button>
+                <button onclick="app.navigate('focus-areas')" data-tab="focus-areas" class="nav-tab-btn gn-pill px-3 py-1.5 text-[14px] font-medium whitespace-nowrap text-[#2E2D29]">Focus Areas</button>
+                <button onclick="app.navigate('domains')" data-tab="domains" class="nav-tab-btn gn-pill px-3 py-1.5 text-[14px] font-medium whitespace-nowrap text-[#2E2D29]">Domains</button>
+                <button onclick="app.navigate('flashcards')" data-tab="flashcards" class="nav-tab-btn gn-pill px-3 py-1.5 text-[14px] font-medium whitespace-nowrap text-[#2E2D29]">Flashcards</button>
+                <button onclick="app.navigate('eco-explorer')" data-tab="eco-explorer" class="nav-tab-btn gn-pill px-3 py-1.5 text-[14px] font-medium whitespace-nowrap text-[#2E2D29]">ECO</button>
+            </nav>
+        </div>
+
+        <!-- Subheader: Active Dataset Filter Pills -->
+        <div class="bg-[#F9D344] border-t border-[#2E2D29]/15 px-4 sm:px-6 lg:px-8 py-2.5">
+            <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-[15px]">
+                <div class="flex flex-wrap items-center gap-2 text-[#2E2D29] font-normal">
+                    <span class="text-[#2E2D29] font-medium flex items-center space-x-1">
+                        <i data-lucide="filter" class="w-3.5 h-3.5"></i>
+                        <span>Dataset:</span>
+                    </span>
+                    <div class="flex flex-wrap items-center gap-2" id="dataset-selector-pills">
+                        <button onclick="app.setActiveDataset('all')" id="pill-all" class="gn-pill px-3.5 py-1 text-[14px] font-medium transition-colors bg-[#2E2D29] text-[#F9D344]">
+                            All (1,840)
+                        </button>
+                        <button onclick="app.setActiveDataset('pmbok')" id="pill-pmbok" class="gn-pill px-3.5 py-1 text-[14px] font-medium transition-colors bg-transparent text-[#2E2D29] border border-[#2E2D29]/30 hover:border-[#2E2D29]">
+                            PMBOK® (700)
+                        </button>
+                        <button onclick="app.setActiveDataset('practice')" id="pill-practice" class="gn-pill px-3.5 py-1 text-[14px] font-medium transition-colors bg-transparent text-[#2E2D29] border border-[#2E2D29]/30 hover:border-[#2E2D29]">
+                            Practice Tests (1,000)
+                        </button>
+                        <button onclick="app.setActiveDataset('training')" id="pill-training" class="gn-pill px-3.5 py-1 text-[14px] font-medium transition-colors bg-transparent text-[#2E2D29] border border-[#2E2D29]/30 hover:border-[#2E2D29]">
+                            Training (140)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-[13px] text-[#2E2D29]/85 hidden md:flex items-center space-x-3 font-medium">
+                    <span>Shuffled Options</span>
+                    <span>•</span>
+                    <span>Question Navigator</span>
+                    <span>•</span>
+                    <span>Section Review</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-all">
+        <!-- Views rendered by app.js -->
+    </main>
+
+    <!-- Pearson VUE Simulator Modal Viewport (Full Screen Overlay) -->
+    <div id="exam-viewport-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm hidden flex flex-col">
+        <div id="exam-viewport" class="w-full h-full bg-white flex flex-col">
+            <!-- Rendered by app.renderExamViewport() -->
+        </div>
+    </div>
+
+    <!-- Question Navigator Modal (10-column Pad Matching Reference Screenshot 1) -->
+    <div id="question-navigator-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full border border-slate-200 overflow-hidden animate-scaleIn">
+            <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="grid" class="w-5 h-5 text-amber-400"></i>
+                    <h3 class="font-extrabold text-base">Question Navigator</h3>
+                </div>
+                <button onclick="app.closeQuestionNavigatorModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-5">
+                <p class="text-xs text-slate-600 font-medium">Click any number to immediately jump to that question:</p>
+                
+                <!-- 10-Column Responsive Question Grid -->
+                <div id="navigator-buttons-grid" class="grid grid-cols-5 sm:grid-cols-10 gap-2 max-h-80 overflow-y-auto p-1">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <!-- Legend Bar (Matching Reference Screenshot 1) -->
+                <div class="flex flex-wrap items-center justify-center gap-4 pt-3 border-t border-slate-200 text-xs text-slate-700">
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-4 h-4 rounded bg-[#0284c7] inline-block shadow-xs"></span>
+                        <span class="font-medium">Answered</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-4 h-4 rounded bg-white border border-slate-300 inline-block shadow-xs"></span>
+                        <span class="font-medium">Unanswered</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <span class="text-red-500 font-bold">🚩</span>
+                        <span class="font-medium">Flagged for Review</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-4 h-4 rounded border-2 border-amber-500 bg-amber-50 inline-block"></span>
+                        <span class="font-bold text-amber-800">Current Question</span>
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 py-3 bg-slate-100 flex justify-end">
+                <button onclick="app.closeQuestionNavigatorModal()" class="px-4 py-2 bg-slate-800 text-white font-bold text-xs rounded-xl hover:bg-slate-700">
+                    Close Navigator
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Whiteboard / Formula Sheet Modal -->
+    <div id="formula-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[85vh] flex flex-col overflow-hidden border border-slate-200 animate-scaleIn">
+            <div class="px-6 py-4 bg-blue-950 text-white flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="file-spreadsheet" class="w-5 h-5 text-amber-400"></i>
+                    <h3 class="font-bold text-base">PMP® High-Yield Exam Formulas & Whiteboard</h3>
+                </div>
+                <button onclick="app.closeFormulaModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-6 text-sm text-slate-700">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                        <h4 class="font-bold text-blue-900 flex items-center space-x-1.5">
+                            <i data-lucide="calculator" class="w-4 h-4 text-blue-600"></i>
+                            <span>Earned Value Management (EVM)</span>
+                        </h4>
+                        <div class="space-y-1 font-mono text-xs">
+                            <p><strong>CV:</strong> EV - AC (Cost Variance)</p>
+                            <p><strong>SV:</strong> EV - PV (Schedule Variance)</p>
+                            <p><strong>CPI:</strong> EV / AC (&gt;1 Under Budget)</p>
+                            <p><strong>SPI:</strong> EV / PV (&gt;1 Ahead of Schedule)</p>
+                            <p><strong>EAC:</strong> BAC / CPI (typical)</p>
+                            <p><strong>ETC:</strong> EAC - AC</p>
+                            <p><strong>VAC:</strong> BAC - EAC</p>
+                            <p><strong>TCPI:</strong> (BAC - EV) / (BAC - AC)</p>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                        <h4 class="font-bold text-blue-900 flex items-center space-x-1.5">
+                            <i data-lucide="clock" class="w-4 h-4 text-blue-600"></i>
+                            <span>Schedule & Communications</span>
+                        </h4>
+                        <div class="space-y-1 font-mono text-xs">
+                            <p><strong>Beta (PERT):</strong> (O + 4M + P) / 6</p>
+                            <p><strong>Triangular:</strong> (O + M + P) / 3</p>
+                            <p><strong>Std Dev (σ):</strong> (P - O) / 6</p>
+                            <p><strong>Variance:</strong> ((P - O) / 6)²</p>
+                            <p><strong>Float (Slack):</strong> LS - ES or LF - EF</p>
+                            <p><strong>Comm Channels:</strong> N × (N - 1) / 2</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Whiteboard Scratchpad -->
+                <div class="space-y-2">
+                    <label class="font-bold text-slate-800 text-xs flex items-center space-x-1">
+                        <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i>
+                        <span>Digital Scratchpad / Scratch Notes</span>
+                    </label>
+                    <textarea id="whiteboard-scratchpad" rows="4" placeholder="Use this scratchpad to calculate formulas or jot down notes during the exam..." class="w-full p-3 font-mono text-xs border rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none bg-amber-50/30 border-amber-200"></textarea>
+                </div>
+            </div>
+            <div class="px-6 py-3 bg-slate-100 flex justify-end">
+                <button onclick="app.closeFormulaModal()" class="px-4 py-2 bg-blue-900 text-white font-bold text-xs rounded-xl hover:bg-blue-800">
+                    Close Whiteboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Built-in Basic Exam Calculator Modal -->
+    <div id="calculator-modal" class="fixed bottom-6 right-6 z-50 bg-white rounded-2xl shadow-2xl border border-slate-300 w-64 hidden overflow-hidden animate-scaleIn">
+        <div class="px-4 py-2.5 bg-slate-900 text-white flex items-center justify-between text-xs font-bold">
+            <span class="flex items-center space-x-1.5">
+                <i data-lucide="calculator" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>Standard Calculator</span>
+            </span>
+            <button onclick="app.closeCalculator()" class="text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+        </div>
+        <div class="p-3 bg-slate-100 border-b text-right font-mono text-xl font-bold text-slate-900 overflow-x-auto" id="calc-display">
+            0
+        </div>
+        <div class="p-3 grid grid-cols-4 gap-1.5 text-xs font-bold">
+            <button onclick="app.calcAction('C')" class="p-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 col-span-2">CLEAR</button>
+            <button onclick="app.calcAction('DEL')" class="p-2 bg-slate-200 rounded-lg hover:bg-slate-300">DEL</button>
+            <button onclick="app.calcAction('/')" class="p-2 bg-amber-100 text-amber-800 rounded-lg hover:bg-amber-200">÷</button>
+
+            <button onclick="app.calcAction('7')" class="p-2 bg-white border rounded-lg hover:bg-slate-100">7</button>
+            <button onclick="app.calcAction('8')" class="p-2 bg-white border rounded-lg hover:bg-slate-100">8</button>
+            <button onclick="app.calcAction('9')" class="p-2 bg-white border rounded-lg hover:bg-slate-100">9</button>
+            <button onclick="app.calcAction('*')" class="p-2 bg-amber-100 text-amber-800 rounded-lg hover:bg-amber-200">×</button>
+
+            <button onclick="app.calcAction('4')" class="p-2 bg-white border rounded-lg hover:bg-slate-100">4</button>
+            <button onclick="app.calcAction('5')" class="p-2 bg-white border rounded-lg hover:bg-slate-100">5</button>
+            <button onclick="app.calcAction('6')" class="p-2 bg-white border rounded-lg hover:bg-slate-100">6</button>
+            <button onclick="app.calcAction('-')" class="p-2 bg-amber-100 text-amber-800 rounded-lg hover:bg-amber-200">-</button>
+
+            <button onclick="app.calcAction('1')" class="p-2 bg-white border rounded-lg hover:bg-slate-100">1</button>
+            <button onclick="app.calcAction('2')" class="p-2 bg-white border rounded-lg hover:bg-slate-100">2</button>
+            <button onclick="app.calcAction('3')" class="p-2 bg-white border rounded-lg hover:bg-slate-100">3</button>
+            <button onclick="app.calcAction('+')" class="p-2 bg-amber-100 text-amber-800 rounded-lg hover:bg-amber-200">+</button>
+
+            <button onclick="app.calcAction('0')" class="p-2 bg-white border rounded-lg col-span-2 hover:bg-slate-100">0</button>
+            <button onclick="app.calcAction('.')" class="p-2 bg-white border rounded-lg hover:bg-slate-100">.</button>
+            <button onclick="app.calcAction('=')" class="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">=</button>
+        </div>
+    </div>
+
+    <!-- Footer Attribution -->
+    <footer class="relative z-10 bg-[#FFFFFF] text-[#45474D] py-6 border-t border-[#1F1F1F]/15 text-[15px]">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-[94px] bg-[#0000EE]"></span>
+                <span>PMP® Exam Simulator</span>
+                <span>• 1,840 Questions</span>
+            </div>
+            <div class="font-normal text-[#45474D]">
+                Designed by <span class="text-[#0000EE] font-medium">Harisha T</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts: 3 Distinct Question Datasets + Engine + App -->
+    <script src="pmbok-questions.js"></script>
+    <script src="pmp-practice-data.js"></script>
+    <script src="training-questions.js"></script>
+    <script src="pmp-engine.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
